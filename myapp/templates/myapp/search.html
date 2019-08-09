@@ -1,18 +1,16 @@
-<h1>Desafio 2xt</h1>
+{% extends 'myapp/base_template.html' %}
 
-<form action="{% url 'myapp:list' %}" method="post">
-    {% csrf_token %}
-    <div>
-        {{ form.as_p}}
-{#        {% for destination in destinations %}#}
-{#            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">#}
-{#            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>#}
-{#        {% endfor %}#}
-{#        <input id="destination" type="text" name="destination" value="{{ destination }}"> <!--make this selectable from a list -->#}
-{#        <label for="boarding">Data do Embarque: </label>#}
-{#        <input id="boarding" type="date" name="boarding">#}
-{#        <label for="boarding">Data do Desembarque: </label>#}
-{#        <input id="landing" type="date" name="landing">#}
-        <input type="submit" value="Vai!">
-    </div>
-</form>
+{% block content %}
+    <form action="{% url 'myapp:list' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <label for="boarding">Data do Embarque: </label>
+        <input id="boarding" type="date" name="boarding" required>
+        <label for="landing">Data do Desembarque: </label>
+        <input id="landing" type="date" name="landing" required>
+        <label for="name">Nome: </label>
+        <input id="name" type="text" maxlength="140" name="name" required>
+        <label for="email">Email: </label>
+        <input id="email" type="email" name="email" required>
+    <button type="submit">Submit</button>
+{% endblock %}
