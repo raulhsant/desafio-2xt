@@ -4,13 +4,60 @@
     <form action="{% url 'myapp:list' %}" method="post">
         {% csrf_token %}
         {{ form }}
-        <label for="boarding">Data do Embarque: </label>
-        <input id="boarding" type="date" name="boarding" required>
-        <label for="landing">Data do Desembarque: </label>
-        <input id="landing" type="date" name="landing" required>
-        <label for="name">Nome: </label>
+        <span id="date_container">
+            <label for="boarding">Data do Embarque: </label>
+            <input id="boarding" type="date" name="boarding" required>
+            <label for="landing">Data do Desembarque: </label>
+            <input id="landing" type="date" name="landing" required>
+            <label for="name">Nome: </label>
+        </span>
         <input id="name" type="text" maxlength="140" name="name" required>
         <label for="email">Email: </label>
         <input id="email" type="email" name="email" required>
-    <button type="submit">Submit</button>
+    {#   TODO: change button style when disabled! #}
+    <button id="submit_btn" type="submit">Submit</button>
+
+    <script>
+        $('#date_container').on('change', function() {
+            let boarding = document.getElementById("boarding").value;
+            let landing = document.getElementById("landing").value;
+            if (boarding === "") boarding = null;
+            if (landing === "") landing = null;
+            $("#submit_btn").attr("disabled", !validateDates(boarding, landing));
+        });
+
+        function validateDates(boarding, landing) {
+            let bDate = undefined;
+            let lDate = undefined;
+            if (boarding !== undefined && boarding !== null) {
+                bDate = moment(boarding).utc().startOf('day').format();
+            }
+            if (landing !== undefined && landing !== null) {
+                lDate = moment(landing).utc().startOf('day').format();
+            }
+            return validate(bDate, lDate);
+        }
+
+        function validate(bDate, lDate) {
+            today = moment().utc().startOf('day').format();
+            if(bDate !== undefined && lDate !== undefined) {
+                if (bDate>lDate) {
+                    alert("The boarding date should be before of the landing date");
+                    return false;
+                } else if (bDate < today) {
+                    alert("The boarding date should be in the future");
+                    return false;
+                }
+            } else if (bDate !== undefined && bDate < today) {
+                    alert("The boarding date should be in the future");
+                    return false;
+            } else if (lDate !== undefined && lDate < today) {
+                alert("The landing date should be in the future");
+                return false;
+            } else {
+                return false;
+            }
+            return true;
+        }
+    </script>
 {% endblock %}

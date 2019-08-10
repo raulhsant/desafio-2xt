@@ -1,6 +1,5 @@
 import datetime
 from django import forms
-from django.core import validators
 
 from .services.assist_trip_service import AssistTripService
 
@@ -14,6 +13,6 @@ def present_or_future_date(value):
 # TODO: check how the form is validated to bypass problem with dates in the past
 class SearchForm(forms.Form):
     destination_list = AssistTripService.get_destinations()
-    destinations = forms.ChoiceField(choices=[(destination.id, destination.name) 
+    selected_destination = forms.ChoiceField(choices=[(destination.id, destination.name)
                                               for destination in sorted(destination_list, key=lambda dest: dest.id)
                                               ], label='Destino', required=True)
