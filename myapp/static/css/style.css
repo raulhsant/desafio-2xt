@@ -1,0 +1,7 @@
+input, label {
+    display:block;
+}
+
+.select{
+    min-width: 200px;
+}

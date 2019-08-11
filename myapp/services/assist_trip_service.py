@@ -62,15 +62,9 @@ class AssistTripService(object):
     @staticmethod
     def get_destinations():
         uri = AssistTripService.__get_destinations_uri()
-        response_dict = AssistTripService.basic_auth_get_request(uri)
-        destination = namedtuple('Destination', 'id name')
-        result_list = []
-        for item in response_dict:
-            result_list.append(destination(item.get('id'), item.get('name')))
-        return result_list
+        return AssistTripService.basic_auth_get_request(uri)
         # Returning mock due to assist trip down time
-        # destination = namedtuple('Destination', 'id name')
-        # return [destination(1, "Brasil")]
+        # return [{"id": 1,"name": "Brasil"}]
 
     @classmethod
     def get_quotations(cls, request_body):

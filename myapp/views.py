@@ -1,15 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from.forms import SearchForm
 
 from .services.quotation_service import QuotationService
-
+from .services.assist_trip_service import AssistTripService
 
 # Create your views here.
 
-
 def search(request):
-    return render(request, 'myapp/search.html', {'form': SearchForm})
+    destination_list = AssistTripService.get_destinations()
+    choices = sorted(destination_list, key=lambda dest: dest.get('id'))
+    return render(request, 'myapp/search.html', {'dest_choices': choices})
 
 
 def list(request):

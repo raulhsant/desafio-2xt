@@ -1,63 +1,95 @@
 {% extends 'myapp/base_template.html' %}
 
 {% block content %}
-    <form action="{% url 'myapp:list' %}" method="post">
+
+    <form name ="myForm" action="{% url 'myapp:list' %}" method="post">
         {% csrf_token %}
-        {{ form }}
-        <span id="date_container">
-            <label for="boarding">Data do Embarque: </label>
-            <input id="boarding" type="date" name="boarding" required>
-            <label for="landing">Data do Desembarque: </label>
-            <input id="landing" type="date" name="landing" required>
-            <label for="name">Nome: </label>
-        </span>
-        <input id="name" type="text" maxlength="140" name="name" required>
-        <label for="email">Email: </label>
-        <input id="email" type="email" name="email" required>
+        <md-content ng-controller="AppCtrl as ctrl" layout-padding="" ng-cloak="" style="background-color: inherit;" ng-app="MyApp" ng-init="ctrl.destinations={{dest_choices}}">
+            <md-input-container style="float:left;margin-right:20px;">
+                <label>Destino</label>
+                <md-select class="select" ng-if="ctrl.destinations && ctrl.destinations.length > 0" ng-model="ctrl.selected_destination" required>
+                    <md-option ng-value="option.id" ng-repeat="option in ctrl.destinations" ng-selected="option.id==ctrl.selected_destination.id"><span ng-bind="option.name"></span></md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container style="float:left;margin-right:20px;">
+                <label>Embarque</label>
+                <md-datepicker ng-model="ctrl.boarding" name="boarding" md-min-date="ctrl.minDate" md-max-date="ctrl.boardingMaxDate()" required=""></md-datepicker>
+                <div ng-messages="myForm.boarding.$error">
+                    <div ng-message="valid">Use a valid date format</div>
+                    <div ng-message="required">Select a boarding date</div>
+                    <div ng-message="mindate">Choose a date on or after {{ctrl.minDate | date:"shortDate"}}</div>
+                    <div ng-message="maxdate">Choose a date on or before {{ctrl.maxDate | date:"shortDate"}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container style="float:left;margin-right:20px;">
+                <label>Desembarque</label>
+                <md-datepicker ng-model="ctrl.landing" name="landing" md-min-date="ctrl.landingMinDate()" required=""></md-datepicker>
+                <div ng-messages="myForm.landing.$error">
+                    <div ng-message="required">Select a landing date</div>
+                    <div ng-message="valid">Use a valid date format</div>
+                    <div ng-message="mindate">Choose a date on or after {{ctrl.getLandingMin | date:"shortDate"}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container style="float:left;margin-right:20px;">
+                <label for="name">Nome: </label>
+                <input id="name" type="text" maxlength="100" name="name" required="" value="" ng-model="ctrl.name">
+                <div ng-messages="myForm.name.$error">
+                    <div ng-message="required">Insert your name</div>
+                </div>
+            </md-input-container>
+            <md-input-container id="email" style="float:left;margin-right:20px;" required="">
+                <label for="email">Email: </label>
+                <input id="email" type="email" name="email" required="" value="" ng-model="ctrl.email" >
+                <div ng-messages="myForm.email.$error">
+                    <div ng-message="required">Insert your email</div>
+                    <div ng-message="invalid">Use a valid email</div>
+                </div>
+            </md-input-container>
     {#   TODO: change button style when disabled! #}
-    <button id="submit_btn" type="submit">Submit</button>
+            <md-button class="background-color: #2b542c" ng-click="ctrl.check(myForm)" ng-disabled="mainForm.$invalid">check</md-button>
+{#    <button id="submit_btn" type="submit">Submit</button>#}
+        </md-content>
+    </form>
 
     <script>
-        $('#date_container').on('change', function() {
-            let boarding = document.getElementById("boarding").value;
-            let landing = document.getElementById("landing").value;
-            if (boarding === "") boarding = null;
-            if (landing === "") landing = null;
-            $("#submit_btn").attr("disabled", !validateDates(boarding, landing));
-        });
+    angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+        .controller('AppCtrl',function($scope) {
+          this.myDate = new Date();
 
-        function validateDates(boarding, landing) {
-            let bDate = undefined;
-            let lDate = undefined;
-            if (boarding !== undefined && boarding !== null) {
-                bDate = moment(boarding).utc().startOf('day').format();
-            }
-            if (landing !== undefined && landing !== null) {
-                lDate = moment(landing).utc().startOf('day').format();
-            }
-            return validate(bDate, lDate);
-        }
+          this.getOptionId = function (option){
+              return option.id;
+          };
+          this.getOptionName = function (option){
+              return option.name;
+          };
+          this.minDate = new Date(
+            this.myDate.getFullYear(),
+            this.myDate.getMonth(),
+            this.myDate.getDate()
+          );
+          this.landingMinDate = function (){
+              if (this.boarding !== undefined && this.boarding !== null){
+                  return this.boarding;
+              }
+              return this.minDate;
+          };
+          this.boardingMaxDate = function (){
+              if (this.landing !== undefined && this.landing !== null){
+                  return this.landing;
+              }
+              return null;
+          };
 
-        function validate(bDate, lDate) {
-            today = moment().utc().startOf('day').format();
-            if(bDate !== undefined && lDate !== undefined) {
-                if (bDate>lDate) {
-                    alert("The boarding date should be before of the landing date");
-                    return false;
-                } else if (bDate < today) {
-                    alert("The boarding date should be in the future");
-                    return false;
-                }
-            } else if (bDate !== undefined && bDate < today) {
-                    alert("The boarding date should be in the future");
-                    return false;
-            } else if (lDate !== undefined && lDate < today) {
-                alert("The landing date should be in the future");
-                return false;
-            } else {
-                return false;
+        this.check = function(form){
+            console.log(form);
+            debugger;
+          };
+        })
+        .config(function($mdDateLocaleProvider) {
+            $mdDateLocaleProvider.formatDate = function (date) {
+                return moment(date).format('DD-MM-YYYY');
             }
-            return true;
-        }
+        })
     </script>
 {% endblock %}
