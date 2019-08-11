@@ -1,7 +1,36 @@
 input, label {
-    display:block;
+    display: block;
 }
-
-.select{
-    min-width: 200px;
+.form{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: auto;
+}
+.form > .content-container{
+    background-color: inherit;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+.form > .content-container > .input-container{
+    float: left;
+    margin-right: 2%;
+    min-width: 12%;
+}
+.form > .content-container > .input-container > .submit-btn{
+    height: 45%;
+    width: 55%;
+    margin-left: 20%;
+}
+.form > .content-container > .input-container > .submit-btn:hover{
+    background-color: #0a990d !important;
+    color: rgb(217, 229, 240)
+}
+.form > .content-container > .input-container > .submit-btn:not([disabled]){
+    background-color: #09b90c;
+}
+.form > .content-container > .input-container > .submit-btn[disabled] {
+  color : rgba(0, 0, 0, 0.26);;
+  background-color: transparent;
 }
