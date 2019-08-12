@@ -13,8 +13,12 @@ def search(request):
 
 
 def list(request):
-    quotations = QuotationService.get_quotations(request.POST.dict())
-    return HttpResponse(f"Still to implement {quotations}")
+    quotation_list = QuotationService.get_quotations(request.POST.dict())
+    product_list = AssistTripService.get_products()
+    for quotation in quotation_list:
+        QuotationService.map_product_to_quotation(quotation, product_list)
+    print(quotation_list)
+    return render(request, 'myapp/list.html', {"quotation_list": quotation_list, "product_list": product_list})
 
 
 def buy(request):

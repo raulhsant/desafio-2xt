@@ -1,0 +1,14 @@
+{% extends 'myapp/base_template.html' %}
+
+{% block content %}
+    {% for quotation in quotation_list %}
+{#                {{ quotation }}#}
+        <div>
+            <!-- TODO: Replace '.' to ',' for price as it's the pt-BR default form of showing values -->
+            <!-- TODO: show correct money tag for price and for coverage_value R$ and USD-->
+            <!-- TODO: make a template for each line!-->
+{#             {% include 'quotation.html' with quotation=quotation %}#}
+            Nome do pacote: {{ quotation.product_name }} | Preço Adulto: {{ quotation.net_price }} {{ quotation.currency }} | Adulto: De {{ quotation.product.min_age }} a {{ quotation.product.elder_age|add:"-1" }}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -71,3 +71,9 @@ class AssistTripService(object):
         uri = cls.__get_quotation_uri()
         response = cls.basic_auth_post_request(uri, request_body)
         return response
+
+    @classmethod
+    def get_products(cls):
+        uri = cls.__get_products_uri()
+        response = cls.basic_auth_get_request(uri)
+        return response
