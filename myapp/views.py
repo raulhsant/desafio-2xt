@@ -11,7 +11,7 @@ def search(request):
     choices = sorted(destination_list, key=lambda dest: dest.get('id'))
     return render(request, 'myapp/search.html', {'dest_choices': choices})
 
-
+# TODO: mount the object as needed on the view to just show it there!
 def list(request):
     quotation_list = QuotationService.get_quotations(request.POST.dict())
     product_list = AssistTripService.get_products()

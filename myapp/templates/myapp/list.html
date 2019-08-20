@@ -1,14 +1,34 @@
 {% extends 'myapp/base_template.html' %}
 
 {% block content %}
-    {% for quotation in quotation_list %}
+    <div class="table-responsive" style="max-width: 95%; margin: auto">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-sm-3 center-align">Plano</th>
+                    <th class="col-sm-2 center-align">Danos às malas</th>
+                    <th class="col-sm-2 center-align">Despesa Médica Hospitalar</th>
+                    <th class="col-sm-5 center-align">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quotation in quotation_list %}
+                    <td class="center-align">{{ quotation.product_name }}</td>
+                    <td class="center-align"> - </td>
+                    <td class="center-align"> - </td>
+                    <td class="center-align">{{ quotation.net_price }}</td>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {#                {{ quotation }}#}
-        <div>
+{#        <div>#}
             <!-- TODO: Replace '.' to ',' for price as it's the pt-BR default form of showing values -->
             <!-- TODO: show correct money tag for price and for coverage_value R$ and USD-->
             <!-- TODO: make a template for each line!-->
 {#             {% include 'quotation.html' with quotation=quotation %}#}
-            Nome do pacote: {{ quotation.product_name }} | Preço Adulto: {{ quotation.net_price }} {{ quotation.currency }} | Adulto: De {{ quotation.product.min_age }} a {{ quotation.product.elder_age|add:"-1" }}
-        </div>
-    {% endfor %}
+
+{#            Nome do pacote: {{ quotation.product_name }} | Preço Adulto: {{ quotation.net_price }} {{ quotation.currency }} | Adulto: De {{ quotation.product.min_age }} a {{ quotation.product.elder_age|add:"-1" }}#}
+{#        </div>#}
+
 {% endblock %}
