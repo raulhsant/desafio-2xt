@@ -11,14 +11,16 @@ def search(request):
     choices = sorted(destination_list, key=lambda dest: dest.get('id'))
     return render(request, 'myapp/search.html', {'dest_choices': choices})
 
+
 # TODO: mount the object as needed on the view to just show it there!
 def list(request):
-    quotation_list = QuotationService.get_quotations(request.POST.dict())
+    quotations = QuotationService.get_quotations(request.POST.dict())
     product_list = AssistTripService.get_products()
-    for quotation in quotation_list:
-        QuotationService.map_product_to_quotation(quotation, product_list)
-    print(quotation_list)
-    return render(request, 'myapp/list.html', {"quotation_list": quotation_list, "product_list": product_list})
+    quotation_dto_list = []
+    for quotation in quotations:
+        quotation_dto_list.append(QuotationService.map_to_dto(quotation, product_list))
+    print(quotation_dto_list)
+    return render(request, 'myapp/list.html', {"quotation_list": quotation_dto_list})
 
 
 def buy(request):

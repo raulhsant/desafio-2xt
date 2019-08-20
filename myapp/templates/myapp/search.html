@@ -60,42 +60,42 @@
     </form>
 
     <script>
-    angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
-        .controller('AppCtrl',function($scope, $mdDateLocale) {
-          this.myDate = new Date();
+        angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+            .controller('AppCtrl',function($scope, $mdDateLocale) {
+              this.myDate = new Date();
 
-          this.getOptionId = function (option){
-              return option.id;
-          };
-          this.getOptionName = function (option){
-              return option.name;
-          };
-          this.minDate = new Date(
-            this.myDate.getFullYear(),
-            this.myDate.getMonth(),
-            this.myDate.getDate()
-          );
-          this.landingMinDate = function (){
-              if (this.boarding !== undefined && this.boarding !== null){
-                  return this.boarding;
-              }
-              return this.minDate;
-          };
-          this.boardingMaxDate = function (){
-              if (this.landing !== undefined && this.landing !== null){
-                  return this.landing;
-              }
-              return null;
-          };
-        })
-        .config(function($mdDateLocaleProvider) {
-            $mdDateLocaleProvider.formatDate = function(date) {
-                  return moment(date).format('DD/MM/YYYY');
-            };
-            $mdDateLocaleProvider.parseDate = function(dateString) {
-                  var m = moment(dateString, 'DD/MM/YYYY', true);
-                  return m.isValid() ? m.toDate() : new Date(NaN);
-            };
-        })
+              this.getOptionId = function (option){
+                  return option.id;
+              };
+              this.getOptionName = function (option){
+                  return option.name;
+              };
+              this.minDate = new Date(
+                this.myDate.getFullYear(),
+                this.myDate.getMonth(),
+                this.myDate.getDate()
+              );
+              this.landingMinDate = function (){
+                  if (this.boarding !== undefined && this.boarding !== null){
+                      return this.boarding;
+                  }
+                  return this.minDate;
+              };
+              this.boardingMaxDate = function (){
+                  if (this.landing !== undefined && this.landing !== null){
+                      return this.landing;
+                  }
+                  return null;
+              };
+            })
+            .config(function($mdDateLocaleProvider) {
+                $mdDateLocaleProvider.formatDate = function(date) {
+                      return moment(date).format('DD/MM/YYYY');
+                };
+                $mdDateLocaleProvider.parseDate = function(dateString) {
+                      var m = moment(dateString, 'DD/MM/YYYY', true);
+                      return m.isValid() ? m.toDate() : new Date(NaN);
+                };
+            })
     </script>
 {% endblock %}

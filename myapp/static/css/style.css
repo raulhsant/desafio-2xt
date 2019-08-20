@@ -38,3 +38,16 @@ input, label {
 .center-align{
   text-align:center;
 }
+
+.center-align > .select-btn{
+    width: 20%;
+    float: right;
+    margin: 0 10% 0 5%
+}
+.center-align > .select-btn:hover{
+    background-color: #27990a !important;
+    color: rgb(217, 229, 240)
+}
+.center-align > .select-btn:not([disabled]){
+    background-color: #29c52cd5;
+}
