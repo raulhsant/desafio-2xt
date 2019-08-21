@@ -37,8 +37,8 @@ class QuotationService(object):
     @classmethod
     def get_prices_in_brl(cls, quotation: dict) -> tuple:
         exchange_rate = quotation.get('exchange_rate')
-        price = str(quotation.get('net_price') * exchange_rate).replace('.', ',')
-        elder_price = str(quotation.get('elder_net_price') * exchange_rate).replace('.', ',')
+        price = "{:.2f}".format(quotation.get('net_price') * exchange_rate).replace('.', ',')
+        elder_price = "{:.2f}".format(quotation.get('elder_net_price') * exchange_rate).replace('.', ',')
         return price, elder_price
 
     @classmethod

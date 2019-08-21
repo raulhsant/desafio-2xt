@@ -19,8 +19,11 @@
                             <td class="center-align"> {{ quotation.name }} </td>
                             <td class="center-align"> {{quotation.baggage_damage_coverage}} </td>
                             <td class="center-align"> {{quotation.medic_expenses_coverage}} </td>
-                            <td class="center-align"> R$ {{ quotation.net_price }}
-                                    <md-button id="{{ quotation.id }}" class="select-btn" type="button" ng-disabled="false" ng-click="ctrl.selectQuotation($event)">Selecionar</md-button>
+                            <td class="center-align flex-around">
+                                <span> Adulto ({{ quotation.min_age }} a {{ quotation.elder_age }} anos):
+                                    <br /> R$ {{ quotation.net_price }}
+                                </span>
+                                <md-button id="{{ quotation.id }}" class="select-btn" type="button" ng-disabled="false" ng-click="ctrl.selectQuotation($event)">Selecionar</md-button>
                             </td>
                         </tr>
                         {% endfor %}
