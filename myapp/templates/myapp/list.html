@@ -2,30 +2,32 @@
 
 {% block content %}
     {% if quotation_list %}
-        <div class="table-responsive" style="max-width: 98%; margin: auto; background-color: inherit">
-            <table class="table table-hover">
-                <thead class="thead-light">
-                    <tr style="font-size: 22px">
-                        <th class="center-align" style="width: 20%">Plano</th>
-                        <th class="center-align" style="width: 25%">Danos às Malas</th>
-                        <th class="center-align" style="width: 25%">Despesas Médicas Hospitalares</th>
-                        <th class="center-align" style="width: 30%">Custo Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for quotation in quotation_list %}
-                    <tr style="font-size: 18px">
-                        <td class="center-align"> {{ quotation.name }} </td>
-                        <td class="center-align"> {{quotation.baggage_damage_coverage}} </td>
-                        <td class="center-align"> {{quotation.medic_expenses_coverage}} </td>
-                        <td class="center-align"> R$ {{ quotation.net_price }}
-                                <md-button class="select-btn" type="button" ng-disabled="false">Selecionar</md-button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <md-content ng-controller="ListCtrl as ctrl" layout-padding="" ng-cloak="" class="content-container" ng-app="MyApp" ng-init="ctrl.quotations={{quotation_list}}">
+            <div class="table-responsive" style="max-width: 98%; margin: auto; background-color: inherit">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr style="font-size: 22px">
+                            <th class="center-align" style="width: 20%">Plano</th>
+                            <th class="center-align" style="width: 25%">Danos às Malas</th>
+                            <th class="center-align" style="width: 25%">Despesas Médicas Hospitalares</th>
+                            <th class="center-align" style="width: 30%">Custo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quotation in quotation_list %}
+                        <tr style="font-size: 18px">
+                            <td class="center-align"> {{ quotation.name }} </td>
+                            <td class="center-align"> {{quotation.baggage_damage_coverage}} </td>
+                            <td class="center-align"> {{quotation.medic_expenses_coverage}} </td>
+                            <td class="center-align"> R$ {{ quotation.net_price }}
+                                    <md-button id="{{ quotation.id }}" class="select-btn" type="button" ng-disabled="false" ng-click="ctrl.selectQuotation($event)">Selecionar</md-button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </md-content>
     {% else %}
         <form name ="myForm" class="form" action="{% url 'myapp:search' %}" method="get">
         {% csrf_token %}
@@ -43,7 +45,42 @@
 
         <script>
             angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
-                .controller('AppCtrl',function() {
+                .controller('ListCtrl',function($http, $window) {
+
+                    this.selectQuotation = function (event){
+                        let desired_quot_id = parseInt(event.target.id); //button id
+                        let selected_quotation = null;
+                        for (index in this.quotations){
+                            if(this.quotations[index].id === desired_quot_id){
+                                selected_quotation = this.quotations[index];
+                                break;
+                            }
+                        }
+
+                        if(selected_quotation !== null)
+                             if (confirm(`Você realmente deseja adquirir o plano ${selected_quotation.name}?`)) {
+                                 this.buyQuotation(selected_quotation);
+                             }
+                    };
+
+                    this.buyQuotation = function (quotation){
+                        $http({
+                           method: 'POST',
+                           url: "{% url 'myapp:buy' %}",
+                           data: JSON.stringify(quotation),
+                           timeout: 4000
+                        }).then(function (success) {
+                            alert("Compra efetuada com sucesso!");
+                             $window.location.href = "{% url 'myapp:search' %}";
+                        }, function (error) {
+                           alert("Não foi possĩvel efetuar a compra, tente novamente mais tarde!");
+                           console.error(error)
+                        });
+                    };
                 })
+                .config(['$httpProvider', function($httpProvider) {
+                    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+                    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+                }]);
         </script>
 {% endblock %}

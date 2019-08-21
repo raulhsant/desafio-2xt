@@ -51,3 +51,10 @@ input, label {
 .center-align > .select-btn:not([disabled]){
     background-color: #29c52cd5;
 }
+
+.content-container{
+    background-color: inherit;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
