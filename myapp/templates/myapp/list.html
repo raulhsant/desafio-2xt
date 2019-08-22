@@ -20,7 +20,7 @@
                             <td class="center-align"> {{quotation.baggage_damage_coverage}} </td>
                             <td class="center-align"> {{quotation.medic_expenses_coverage}} </td>
                             <td class="center-align flex-around">
-                                <span> Adulto ({{ quotation.min_age }} a {{ quotation.elder_age }} anos):
+                                <span style="margin: auto;"> Adulto ({{ quotation.min_age }} a {{ quotation.elder_age }} anos):
                                     <br /> R$ {{ quotation.net_price }}
                                 </span>
                                 <md-button id="{{ quotation.id }}" class="select-btn" type="button" ng-disabled="false" ng-click="ctrl.selectQuotation($event)">Selecionar</md-button>
@@ -47,9 +47,8 @@
 {#             {% include 'quotation.html' with quotation=quotation %}#}
 
         <script>
-            angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
-                .controller('ListCtrl',function($http, $window) {
-
+            angular.module('MyApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'ui.utils.masks'])
+                .controller('ListCtrl',function($http, $window, $mdDialog) {
                     this.selectQuotation = function (event){
                         let desired_quot_id = parseInt(event.target.id); //button id
                         let selected_quotation = null;
@@ -60,16 +59,34 @@
                             }
                         }
 
-                        if(selected_quotation !== null)
-                             if (confirm(`Você realmente deseja adquirir o plano ${selected_quotation.name}?`)) {
-                                 this.buyQuotation(selected_quotation);
-                             }
+                        if(selected_quotation !== null){
+                            this.openPurchaseModal(selected_quotation);
+                        }
+
+                             {#if (confirm(`Você realmente deseja adquirir o plano ${selected_quotation.name}?`)) {#}
+                             {#    this.buyQuotation(selected_quotation);#}
+                             {#}#}
                     };
+                    this.openPurchaseModal = function(quotation){
+                        var parentEl = angular.element(document.body);
+                        {% load static %}
+                        let templateUrl = "{% static 'modal/purchase.html' %}"
+                        $mdDialog.show({
+                            parent: parentEl,
+                            templateUrl: templateUrl,
+                            controller: 'PurchaseModalCtrl',
+                            clickOutsideToClose: true,
+                            hasBackdrop: true,
+                            locals:{
+                                quotation: quotation
+                            }
+                        });
+                    }
 
                     this.buyQuotation = function (quotation){
                         $http({
                            method: 'POST',
-                           url: "{% url 'myapp:buy' %}",
+                           url: "{% url 'myapp:purchase' %}",
                            data: JSON.stringify(quotation),
                            timeout: 4000
                         }).then(function (success) {
@@ -81,9 +98,36 @@
                         });
                     };
                 })
+                .controller('PurchaseModalCtrl', function($scope, $http, $mdDialog, quotation, $mdDateLocale){
+                    $scope.quotation = quotation;
+                    $scope.insureds = []
+                    console.log(quotation)
+
+                    $scope.addInsured = function(){
+                        let insured = {index: $scope.insureds.length}
+                        $scope.insureds.push(insured)
+                    }
+
+                    $scope.removeInsured = function(index){
+                        $scope.insureds.splice(index, 1);
+                    }
+
+                    $scope.closeDialog = function() {
+                        $mdDialog.hide();
+                    }
+                })
                 .config(['$httpProvider', function($httpProvider) {
                     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
                     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-                }]);
+                }])
+                .config(function($mdDateLocaleProvider) {
+                    $mdDateLocaleProvider.formatDate = function(date) {
+                        return moment(date).format('DD/MM/YYYY');
+                    };
+                    $mdDateLocaleProvider.parseDate = function(dateString) {
+                        var m = moment(dateString, 'DD/MM/YYYY', true);
+                        return m.isValid() ? m.toDate() : new Date(NaN);
+                    };
+                });
         </script>
 {% endblock %}

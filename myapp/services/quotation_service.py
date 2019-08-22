@@ -7,9 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class QuotationService(object):
-    QuotationDTO = namedtuple('QuotationDTO',
-                              ['id', 'name', 'baggage_damage_coverage', 'medic_expenses_coverage', 'max_age', 'min_age',
-                               'elder_age', 'net_price', 'elder_net_price'])
 
     @classmethod
     def define_quotation_coverages(cls):
@@ -42,8 +39,9 @@ class QuotationService(object):
         return price, elder_price
 
     @classmethod
-    def map_to_dto(cls, quotation: dict, product_list: list, client_info: dict) -> dict:
+    def map_to_dto(cls, quotation: dict, product_list: list, client_info: dict, destination_list: list) -> dict:
         desired_product = [product for product in product_list if product.get("id") == quotation.get("product_id")][0]
+        destination = [destination for destination in destination_list if destination.get("id") == int(client_info.get("selected_destination"))][0]
         prices_tuple = cls.get_prices_in_brl(quotation)
         # TODO: Remove hardcodeds
         return {"id": quotation.get('product_id'), "name": quotation.get('product_name'), "net_price": prices_tuple[0],
@@ -51,6 +49,7 @@ class QuotationService(object):
                 "medic_expenses_coverage": cls.get_coverage_value(quotation, (1, 2)),
                 "elder_age": desired_product.get('elder_age'), "max_age": desired_product.get('max_age'),
                 "min_age": desired_product.get('min_age'), "client_info": client_info,
+                "destination": destination,
                 "csrfmiddlewaretoken": client_info.get('csrfmiddlewaretoken')}
 
     @classmethod

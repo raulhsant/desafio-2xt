@@ -1,0 +1,79 @@
+<md-dialog style="min-height: 30%; min-width: 50%; background-color: #f6f6f6"> 
+    <md-content class="content-container" style="justify-content: space-around; flex-wrap: wrap;">
+        <div style="align-content: center; margin: auto; text-align:center; width: 100%">
+            <h4 ng-bind="quotation.name"></h5>
+            <hr>
+        </div>
+        <div class="break"></div> <!-- break -->
+        <form ng-cloak class="form" style="flex-wrap: inherit">
+            <md-input-container id="destination_container" >
+                <label for="destination">Destino: </label>
+                <input id="destination" type="text" maxlength="100" name="destination" required="" ng-disabled="true" ng-model="quotation.destination.name"/>
+            </md-input-container>
+            <md-input-container id="boarding_container" >
+                <label>Embarque</label>
+                <md-datepicker ng-model="quotation.client_info.boarding" name="boarding" required="" ng-disabled="true"></md-datepicker>
+            </md-input-container>
+            <md-input-container id="landing_container" >
+                <label>Desembarque</label>
+                <md-datepicker ng-model="quotation.client_info.landing" name="landing" required="" ng-disabled="true"></md-datepicker>
+            </md-input-container>
+
+            <div class="break"></div> <!-- break -->
+
+            <md-input-container id="client_address_container" style="min-width:25%; margin: auto" >
+                <label for="client_name">Nome: </label>
+                <input id="client_name" type="text" maxlength="100" name="client_name" required="" ng-disabled="true" ng-model="quotation.client_info.name"/>
+            </md-input-container>
+            <md-input-container id="client_email_container" style="min-width:25%; margin: auto" >
+                <label for="client_email">Email: </label>
+                <input id="client_email" type="email" maxlength="100" name="client_email" required="" ng-disabled="true" ng-model="quotation.client_info.email"/>
+            </md-input-container>
+            <md-input-container id="client_phone_container" style="min-width:25%; margin: auto">
+                <label for="client_phone">Telefone: </label>
+                <input type="text" name="phone" ng-model="client.phone" required="" ui-br-phone-number>
+            </md-input-container>
+
+            <div class="break"></div> <!-- break -->
+
+            <md-input-container id="client_address_container" style="width: 30%; margin: auto" >
+                <label for="client_address">Endereço: </label>
+                <input id="client_address" type="text" maxlength="400" name="client_address" required="" ng-model="client.address"/>
+            </md-input-container>
+            <md-input-container id="client_cep_container" style="min-width:15%; margin: auto" >
+                <label for="client_cep">CEP: </label>
+                <input id="client_cep" type="text" name="client.cep" required="" ng-model="client.cep" ui-br-cep-mask/>
+            </md-input-container>
+            <md-input-container id="client_city_container" style="min-width:25%; margin: auto">
+                <label for="client_city">Cidade: </label>
+                <input type="text" name="city" ng-model="client.city" required="" maxlength=100>
+            </md-input-container>
+            <md-input-container id="client_state_container" style="min-width:10%; margin: auto">
+                <label for="client_state">Estado: </label>
+                <input type="text" name="state" ng-model="client.state" required="" ui-br-ie-mask="state">
+            </md-input-container>
+
+            <div style="align-content: center; margin: auto; text-align:center; width: 100%;">
+                <hr>
+            </div>
+
+            <div style="align-content: center; margin: auto; text-align:center; width: 100%">
+                <h6>Segurados</h6>
+            </div>
+            <button name="add_insured" type="button" ng-click="addInsured()">Adicionar Segurado</button>
+            <div class="break"></div> <!-- break -->
+
+            <!-- TODO: implement insureds part of modal form -->
+            <div data-ng-repeat="insured in insureds" class="form" style="flex-basis: 100%">
+                <button name="remove_insured" type="button" ng-click="removeInsured($index)">Remover Segurado</button>
+            </div>
+
+
+        </form>
+    </md-content> 
+    <md-dialog-actions> 
+        <md-button ng-click="closeDialog()" class="md-primary"> 
+          Close Dialog 
+        </md-button> 
+    </md-dialog-actions> 
+</md-dialog>
