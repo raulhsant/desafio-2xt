@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 import requests
 import base64
 import logging
@@ -48,10 +46,12 @@ class AssistTripService(object):
 
     @staticmethod
     def basic_auth_post_request(uri: str, body: dict):
+        headers = {'content-type': 'application/json'}
         response = requests.post(uri, auth=(get_string(user), get_string(passw)), data=json.dumps(body), headers=headers)
         if response.status_code != 200:
             logger.error(uri)
             logger.error(response)
+            logger.error(response.cotent)
              # should I treat this or just return empty?
             return {}
         else:
