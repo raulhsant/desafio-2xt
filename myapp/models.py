@@ -2,12 +2,12 @@ from django.db import models
 
 
 # Create your models here.
-class Purchase(models.Model):
+class Purchase(models.Model): #Should I save the contact information on this object?
     id = models.IntegerField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id
+        return f"{self.id}"
 
 
 class Insured(models.Model):
