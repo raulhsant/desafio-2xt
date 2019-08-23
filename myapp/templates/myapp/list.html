@@ -62,11 +62,8 @@
                         if(selected_quotation !== null){
                             this.openPurchaseModal(selected_quotation);
                         }
-
-                             {#if (confirm(`Você realmente deseja adquirir o plano ${selected_quotation.name}?`)) {#}
-                             {#    this.buyQuotation(selected_quotation);#}
-                             {#}#}
                     };
+
                     this.openPurchaseModal = function(quotation){
                         var parentEl = angular.element(document.body);
                         {% load static %}
@@ -81,7 +78,7 @@
                                 quotation: quotation
                             }
                         });
-                    }
+                    };
 
                     this.buyQuotation = function (quotation){
                         $http({
@@ -98,23 +95,56 @@
                         });
                     };
                 })
-                .controller('PurchaseModalCtrl', function($scope, $http, $mdDialog, quotation, $mdDateLocale){
+                .controller('PurchaseModalCtrl', function($scope, $http, $mdDialog, quotation, $mdDateLocale, $window){
                     $scope.quotation = quotation;
-                    $scope.insureds = []
+                    $scope.insureds = [];
                     console.log(quotation)
-
                     $scope.addInsured = function(){
-                        let insured = {index: $scope.insureds.length}
-                        $scope.insureds.push(insured)
-                    }
-
+                        let insured = {index: $scope.insureds.length};
+                        $scope.insureds.push(insured);
+                    };
                     $scope.removeInsured = function(index){
                         $scope.insureds.splice(index, 1);
-                    }
-
+                    };
                     $scope.closeDialog = function() {
                         $mdDialog.hide();
-                    }
+                    };
+                    $scope.makePurchase = function(){
+                        let purchase_body = $scope.mountPurchaseBody();
+                        $http({
+                           method: 'POST',
+                           url: "{% url 'myapp:purchase' %}",
+                           data: JSON.stringify(purchase_body),
+                           timeout: 40000
+                        }).then(function (success) {
+                             $window.location.href = "{% url 'myapp:search' %}";
+                        }, function (error) {
+                           alert("Não foi possível efetuar a compra, tente novamente mais tarde!");
+                           console.error(error)
+                        });
+                    };
+
+                    $scope.mountPurchaseBody = function(){
+                        let body = {};
+                        body.plan_id = $scope.quotation.id;
+                        body.coverage_begin = $scope.quotation.client_info.boarding;
+                        body.coverage_end = $scope.quotation.client_info.landing;
+                        body.destination_id = $scope.quotation.destination.id;
+                        body.contact = {
+                            name: $scope.client.name,
+                            email: $scope.client.email,
+                            phone: $scope.client.phone
+                        };
+                        body.address = {
+                            address: $scope.client.address,
+                            cep: $scope.client.cep,
+                            city: $scope.client.city,
+                            state: $scope.client.state
+                        };
+                        debugger;
+                        body.insureds = $scope.insureds;
+                        return body;
+                    };
                 })
                 .config(['$httpProvider', function($httpProvider) {
                     $httpProvider.defaults.xsrfCookieName = 'csrftoken';

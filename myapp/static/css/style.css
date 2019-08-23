@@ -41,16 +41,16 @@ input, label {
   align-items: center;
 }
 
-.center-align > .select-btn{
+.select-btn{
     width: 20%;
     float: right;
     margin: auto;
 }
-.center-align > .select-btn:hover{
+.select-btn:hover{
     background-color: #27990a !important;
     color: rgb(217, 229, 240)
 }
-.center-align > .select-btn:not([disabled]){
+.select-btn:not([disabled]){
     background-color: #29c52cd5;
 }
 

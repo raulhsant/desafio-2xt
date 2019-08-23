@@ -5,7 +5,7 @@
             <hr>
         </div>
         <div class="break"></div> <!-- break -->
-        <form ng-cloak class="form" style="flex-wrap: inherit">
+        <form name="purchase_form" ng-cloak class="form" style="flex-wrap: inherit">
             <md-input-container id="destination_container" >
                 <label for="destination">Destino: </label>
                 <input id="destination" type="text" maxlength="100" name="destination" required="" ng-disabled="true" ng-model="quotation.destination.name"/>
@@ -23,11 +23,11 @@
 
             <md-input-container id="client_address_container" style="min-width:25%; margin: auto" >
                 <label for="client_name">Nome: </label>
-                <input id="client_name" type="text" maxlength="100" name="client_name" required="" ng-disabled="true" ng-model="quotation.client_info.name"/>
+                <input id="client_name" type="text" maxlength="100" name="client.name" required="" ng-disabled="true" ng-model="quotation.client_info.name"/>
             </md-input-container>
             <md-input-container id="client_email_container" style="min-width:25%; margin: auto" >
                 <label for="client_email">Email: </label>
-                <input id="client_email" type="email" maxlength="100" name="client_email" required="" ng-disabled="true" ng-model="quotation.client_info.email"/>
+                <input id="client_email" type="email" maxlength="100" name="client.email" required="" ng-disabled="true" ng-model="quotation.client_info.email"/>
             </md-input-container>
             <md-input-container id="client_phone_container" style="min-width:25%; margin: auto">
                 <label for="client_phone">Telefone: </label>
@@ -38,7 +38,7 @@
 
             <md-input-container id="client_address_container" style="width: 30%; margin: auto" >
                 <label for="client_address">Endereço: </label>
-                <input id="client_address" type="text" maxlength="400" name="client_address" required="" ng-model="client.address"/>
+                <input id="client_address" type="text" maxlength="400" name="client.address" required="" ng-model="client.address"/>
             </md-input-container>
             <md-input-container id="client_cep_container" style="min-width:15%; margin: auto" >
                 <label for="client_cep">CEP: </label>
@@ -50,30 +50,45 @@
             </md-input-container>
             <md-input-container id="client_state_container" style="min-width:10%; margin: auto">
                 <label for="client_state">Estado: </label>
-                <input type="text" name="state" ng-model="client.state" required="" ui-br-ie-mask="state">
+                <input type="text" name="state" ng-model="client.state" required="">
             </md-input-container>
 
             <div style="align-content: center; margin: auto; text-align:center; width: 100%;">
                 <hr>
             </div>
 
-            <div style="align-content: center; margin: auto; text-align:center; width: 100%">
-                <h6>Segurados</h6>
+            <div style="align-items: center; margin: auto; justify-content: center; width: 100%; margin-bottom: 3%">
+                <span style="font-size: 22px; width: 20%; margin: 0 10% 0 40%; min-height: 20%">Segurados</span>
+                <button name="add_insured" type="button" ng-click="addInsured()" style="font-size: 14px; padding: 1%;">Adicionar Segurado</button>
             </div>
-            <button name="add_insured" type="button" ng-click="addInsured()">Adicionar Segurado</button>
             <div class="break"></div> <!-- break -->
 
             <!-- TODO: implement insureds part of modal form -->
-            <div data-ng-repeat="insured in insureds" class="form" style="flex-basis: 100%">
-                <button name="remove_insured" type="button" ng-click="removeInsured($index)">Remover Segurado</button>
+            <div data-ng-repeat="insured in insureds" class="flex-around" style="justify-content: space-evenly; margin: 0 10% 0 10%; width: 100%" >
+                <md-input-container id="insured_first_name_container">
+                    <label for="insured_first_name">Nome: </label>
+                    <input type="text" name="insured_first_name" ng-model="insured.first_name" required="" maxlength=30>
+                </md-input-container>
+                <md-input-container id="insured_last_name_container">
+                    <label for="insured_last_name">Sobrenome: </label>
+                    <input type="text" name="insured_last_name" ng-model="insured.last_name" required="" maxlength=30>
+                </md-input-container>
+                <md-input-container id="insured_birth_container" >
+                    <label>Nascimento</label>
+                    <md-datepicker ng-model="insured.birth" name="insured_birth" required=""></md-datepicker>
+                </md-input-container>
+                <md-input-container id="insured_cpf_container">
+                    <label for="insured_cpf">CPF: </label>
+                    <input type="text" name="insured_cpf" ng-model="insured.cpf" required="" ui-br-cpf-mask>
+                </md-input-container>
+                <md-input-container id="insured_cpf_container">
+                    <button name="remove_insured" type="button" ng-click="removeInsured($index)">Remover Segurado</button>
+                </md-input-container>
             </div>
-
-
         </form>
     </md-content> 
-    <md-dialog-actions> 
-        <md-button ng-click="closeDialog()" class="md-primary"> 
-          Close Dialog 
-        </md-button> 
+    <md-dialog-actions>
+        <md-button ng-click="closeDialog()" class="md-raised md-warn" style="margin-right: 5% ">Cancelar</md-button>
+        <md-button ng-click="makePurchase()" class="select-btn" ng-disabled="purchase_form.$invalid || insureds.length < 1">Comprar</md-button>
     </md-dialog-actions> 
 </md-dialog>
