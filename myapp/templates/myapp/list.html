@@ -131,8 +131,8 @@
                         body.coverage_end = $scope.quotation.client_info.landing;
                         body.destination_id = $scope.quotation.destination.id;
                         body.contact = {
-                            name: $scope.client.name,
-                            email: $scope.client.email,
+                            name: $scope.quotation.client_info.name,
+                            email: $scope.quotation.client_info.email,
                             phone: $scope.client.phone
                         };
                         body.address = {
@@ -142,9 +142,21 @@
                             state: $scope.client.state
                         };
                         debugger;
-                        body.insureds = $scope.insureds;
+                        body.insureds = $scope.cleanInsureds();
                         return body;
                     };
+
+                    $scope.cleanInsureds = function(){
+                        return $scope.insureds.map( insured => {
+                            let clean_insured = {};
+                            clean_insured.first_name = insured.first_name;
+                            clean_insured.last_name = insured.last_name;
+                            clean_insured.cpf = insured.cpf;
+                            clean_insured.date_of_birth = moment(insured.birth).format('YYYY-MM-DD');
+
+                            return clean_insured;
+                        })
+                    }
                 })
                 .config(['$httpProvider', function($httpProvider) {
                     $httpProvider.defaults.xsrfCookieName = 'csrftoken';

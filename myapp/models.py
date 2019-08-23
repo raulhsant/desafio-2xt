@@ -3,16 +3,22 @@ from django.db import models
 
 # Create your models here.
 class Purchase(models.Model):
-    # product_id = models.IntegerField
-    # destination_id = models.IntegerField
+    id = models.IntegerField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    # client_name = models.CharField(max_length=200)
-    # client_email = models.EmailField
-    # boarding = models.DateField('boarding date')
-    # landing = models.DateField('landing date')
+    def __str__(self):
+        return self.id
 
-    # net_price = models.FloatField
-    # elder_net_price = models.FloatField
 
-    created_at = models.DateTimeField
+class Insured(models.Model):
+    document_url = models.CharField(max_length=300)
+    policy_number = models.CharField(max_length=100, null=True)
+    zurich_policy_number = models.CharField(max_length=100, null=True)
+    assist_trip_id = models.IntegerField()
+    travel_assistance_voucher = models.CharField(max_length=100 , null=True)
+    insurance_ticket = models.CharField(max_length=100, null=True)
+    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"id:{self.assist_trip_id} purchase:{self.purchase_id}"
 

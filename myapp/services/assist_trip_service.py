@@ -48,8 +48,7 @@ class AssistTripService(object):
 
     @staticmethod
     def basic_auth_post_request(uri: str, body: dict):
-
-        response = requests.post(uri, auth=(get_string(user), get_string(passw)), data=json.dumps(body))
+        response = requests.post(uri, auth=(get_string(user), get_string(passw)), data=json.dumps(body), headers=headers)
         if response.status_code != 200:
             logger.error(uri)
             logger.error(response)
@@ -76,4 +75,10 @@ class AssistTripService(object):
     def get_products(cls):
         uri = cls.__get_products_uri()
         response = cls.basic_auth_get_request(uri)
+        return response
+
+    @classmethod
+    def make_purchase(cls, post_body):
+        uri = cls.__get_purchase_uri()
+        response = cls.basic_auth_post_request(uri, post_body)
         return response
