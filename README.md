@@ -1,6 +1,6 @@
 # Desafio 2xt
 
-Esse projeto deve ser executado com **Python 3.5+** e foi desenvolvido utilizando Python **3.7.3**.
+Esse projeto deve ser executado com **Python 3.6+** e foi desenvolvido utilizando **Python 3.7.3**.
 
 ## Configuração
 
